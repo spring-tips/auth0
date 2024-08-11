@@ -3,21 +3,17 @@ package bootiful.gateway;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
-import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
 import org.springframework.security.oauth2.client.web.server.DefaultServerOAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.client.web.server.ServerOAuth2AuthorizationRequestResolver;
-import org.springframework.security.oauth2.client.web.server.ServerOAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.util.function.Consumer;
 
@@ -31,15 +27,43 @@ public class GatewayApplication {
     }
 
     @Bean
+    RouteLocator gateway(RouteLocatorBuilder rlb,
+                         @Value("${mogul.gateway.api:http://localhost:8080}") String api) {
+        var apiPrefix = "/api/";
+        return rlb//
+                .routes()
+                .route(rs -> rs.path(apiPrefix + "**")
+                        .filters(f -> f.tokenRelay().rewritePath(apiPrefix + "(?<segment>.*)", "/$\\{segment}"))
+                        .uri(api))
+                .build();
+    }
+
+    @Bean
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        return http//
+                .authorizeExchange((authorize) -> authorize//
+                        .anyExchange()
+                        .authenticated()//
+                )//
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)//
+                .oauth2Login(Customizer.withDefaults())//
+                .oauth2Client(Customizer.withDefaults())//
+                .build();
+    }
+
+
+
+    /*@Bean
     WebClient http(ReactiveClientRegistrationRepository clientRegistrations,
                    ServerOAuth2AuthorizedClientRepository authorizedClients,
                    WebClient.Builder builder) {
         var oauth = new ServerOAuth2AuthorizedClientExchangeFilterFunction(clientRegistrations, authorizedClients);
         oauth.setDefaultOAuth2AuthorizedClient(true);
         return builder.filter(oauth).build();
-    }
+    }*/
 }
-
+/*
 @Controller
 @ResponseBody
 class Client {
@@ -59,7 +83,7 @@ class Client {
                 .bodyToMono(String.class);
     }
 
-}
+}*/
 
 
 /**
