@@ -65,7 +65,7 @@ class SecurityConfiguration {
     private final ReactiveClientRegistrationRepository clientRegistrationRepository;
 
     SecurityConfiguration(ReactiveClientRegistrationRepository clientRegistrationRepository,
-                          @Value("${okta.oauth2.audience}") String audience) {
+                          @Value("${auth0.audience}") String audience) {
         this.clientRegistrationRepository = clientRegistrationRepository;
         this.audience = audience;
     }
