@@ -52,39 +52,7 @@ public class GatewayApplication {
                 .build();
     }
 
-
-
-    /*@Bean
-    WebClient http(ReactiveClientRegistrationRepository clientRegistrations,
-                   ServerOAuth2AuthorizedClientRepository authorizedClients,
-                   WebClient.Builder builder) {
-        var oauth = new ServerOAuth2AuthorizedClientExchangeFilterFunction(clientRegistrations, authorizedClients);
-        oauth.setDefaultOAuth2AuthorizedClient(true);
-        return builder.filter(oauth).build();
-    }*/
 }
-/*
-@Controller
-@ResponseBody
-class Client {
-
-    private final WebClient http;
-
-    Client(WebClient http) {
-        this.http = http;
-    }
-
-    @GetMapping("/hello")
-    Mono<String> hello() {
-        return http
-                .get()
-                .uri("http://localhost:8080/hello")
-                .retrieve()
-                .bodyToMono(String.class);
-    }
-
-}*/
-
 
 /**
  * a useful fix from <a href="https://github.com/okta/okta-spring-boot/issues/596">Matt Raible</a>

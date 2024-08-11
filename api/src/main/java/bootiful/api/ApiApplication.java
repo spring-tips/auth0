@@ -18,8 +18,6 @@ public class ApiApplication {
     }
 }
 
-
-
 @Controller
 @ResponseBody
 class GreetingsController {
