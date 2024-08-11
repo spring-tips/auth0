@@ -21,15 +21,6 @@ public class ApiApplication {
     public static void main(String[] args) {
         SpringApplication.run(ApiApplication.class, args);
     }
-
-    @Bean
-    SecurityFilterChain filterChain(HttpSecurity http, JwtDecoder jwtDecoder) throws Exception {
-        return http
-                .authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
-                .cors(Customizer.withDefaults())
-                .oauth2ResourceServer(ors -> ors.jwt(c -> c.decoder(jwtDecoder)))
-                .build();
-    }
 }
 
 
