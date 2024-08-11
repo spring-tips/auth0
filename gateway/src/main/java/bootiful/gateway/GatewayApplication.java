@@ -62,6 +62,9 @@ class Client {
 }
 
 
+/**
+ * a useful fix from <a href="https://github.com/okta/okta-spring-boot/issues/596">Matt Raible</a>
+ */
 @Configuration
 class SecurityConfiguration {
 
