@@ -15,14 +15,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 
+// https://github.com/auth0-samples/auth0-spring-security5-api-sample/commit/b6d4229977d0c0c88f92ffe799a0f0143b30e3fc
 @SpringBootApplication
 public class GatewayApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(GatewayApplication.class, args);
     }
-
-
 
     @Bean
     WebClient http(ReactiveClientRegistrationRepository clientRegistrations,
